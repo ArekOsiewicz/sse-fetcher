@@ -116,7 +116,12 @@ var SSEFetcher = (function () {
             }
         }
         async _connect() {
-            const headers = new Headers(this._headers);
+            let additionalHeaders = {};
+            if (typeof (this._headers) == "function")
+                additionalHeaders = this._headers();
+            else
+                additionalHeaders = this._headers;
+            const headers = new Headers(additionalHeaders);
             headers.set('Accept', 'text/event-stream');
             if (this._lastId) {
                 headers.set('Last-Event-ID', this._lastId);
