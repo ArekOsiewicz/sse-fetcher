@@ -3,6 +3,7 @@ interface SSEFetcherOpts {
     withCredentials?: boolean;
     /** Initial reconnection delay */
     reconnectionDelay?: number;
+    headers?: any;
 }
 interface Message {
     data: string;
@@ -35,6 +36,8 @@ export default class SSEFetcher {
     private _aborted;
     /** Milliseconds between reconnection */
     private _reconnectionDelay;
+    /** Additional connection headers */
+    private _headers;
     constructor(url: RequestInfo, opts?: SSEFetcherOpts);
     /** Get the next server-sent message */
     nextMessage(): Promise<Message>;

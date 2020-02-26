@@ -16,9 +16,12 @@ class SSEFetcher {
         this._lastIdBuffer = '';
         /** True when the user has requested the connection aborts */
         this._aborted = false;
+        /** Additional connection headers */
+        this._headers = {};
         this._url = url;
         this._withCredentials = !!opts.withCredentials;
         this._reconnectionDelay = opts.reconnectionDelay || 2000;
+        this._headers = opts.headers || {};
         this._maintainConnection();
     }
     /** Get the next server-sent message */
@@ -110,7 +113,8 @@ class SSEFetcher {
         }
     }
     async _connect() {
-        const headers = new Headers({ 'Accept': 'text/event-stream' });
+        const headers = new Headers(this._headers);
+        headers.set('Accept', 'text/event-stream');
         if (this._lastId) {
             headers.set('Last-Event-ID', this._lastId);
         }
@@ -151,7 +155,7 @@ class SSEFetcher {
                 const index = line.indexOf(':');
                 const field = line.slice(0, index);
                 let value = line.slice(index + 1);
-                // Stript single leading space in value
+                // Strip single leading space in value
                 if (value[0] === ' ')
                     value = value.slice(1);
                 this._process(field, value);

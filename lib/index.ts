@@ -3,6 +3,7 @@ interface SSEFetcherOpts {
   withCredentials?: boolean;
   /** Initial reconnection delay */
   reconnectionDelay?: number;
+  headers?: any;
 }
 
 interface Message {
@@ -37,11 +38,14 @@ export default class SSEFetcher {
   private _aborted = false;
   /** Milliseconds between reconnection */
   private _reconnectionDelay: number;
+  /** Additional connection headers */
+  private _headers = {};
 
   constructor(url: RequestInfo, opts: SSEFetcherOpts = {}) {
     this._url = url;
     this._withCredentials = !!opts.withCredentials;
     this._reconnectionDelay = opts.reconnectionDelay || 2000;
+    this._headers = opts.headers || {};
     this._maintainConnection();
   }
 
@@ -142,8 +146,9 @@ export default class SSEFetcher {
   }
 
   private async _connect() {
-    const headers = new Headers({'Accept': 'text/event-stream'});
+    const headers = new Headers(this._headers);
 
+    headers.set('Accept', 'text/event-stream');
     if (this._lastId) {
       headers.set('Last-Event-ID', this._lastId);
     }

@@ -24,7 +24,8 @@
   "homepage": "https://github.com/jakearchibald/sse-fetcher#readme",
   "devDependencies": {
     "rollup": "^0.66.2",
+    "rollup-plugin-terser": "^3.0.0",
     "rollup-plugin-typescript2": "^0.17.0",
-    "rollup-plugin-terser": "^3.0.0"
+    "typescript": "^3.8.2"
   }
 }
