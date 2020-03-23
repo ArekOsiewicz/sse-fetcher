@@ -126,11 +126,16 @@ var SSEFetcher = (function () {
             if (this._lastId) {
                 headers.set('Last-Event-ID', this._lastId);
             }
+            let error = false;
             const response = await fetch(this._url, {
                 headers,
                 credentials: this._withCredentials ? 'include' : 'same-origin',
                 cache: 'no-store',
-            });
+            }).catch((err) => { error = err; });
+            if (error || !response) {
+                this._error(Error("0"));
+                return;
+            }
             if (response.status !== 200) {
                 this._error(Error(response.status.toString()));
                 response.body.cancel();
