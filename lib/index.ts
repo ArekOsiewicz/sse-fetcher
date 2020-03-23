@@ -163,7 +163,7 @@ export default class SSEFetcher {
     });
 
     if (response.status !== 200) {
-      this._error(Error('Bad status'));
+      this._error(Error(response.status.toString()));
       response.body!.cancel();
       return;
     }
